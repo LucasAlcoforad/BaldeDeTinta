@@ -14,6 +14,6 @@ public class Main {
                 {0, 0, 0, 1, 1}
         };
         Solution solution = new Solution();
-        System.out.println(Arrays.deepToString(solution.solution(board, 0, 0, 3)));
+        System.out.println(Arrays.deepToString(solution.solution(board, 2, 2, 2)));
     }
 }
