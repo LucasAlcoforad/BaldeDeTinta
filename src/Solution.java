@@ -4,14 +4,20 @@ public class Solution {
     // Direçoes para navegar nos vizinhos do no ([linha], [coluna])
     int[][] directions = {
             {0, 1},
-            {1, 0},
-            {0, -1},
-            {-1, 0},
             {1, 1},
+            {1, 0},
             {1, -1},
-            {-1, 1},
-            {-1, -1}
+            {0, -1},
+            {-1, -1},
+            {-1, 0},
+            {-1, 1}
     };
+
+    public Graph graph;
+
+    public Solution() {
+        this.graph = new Graph(0);
+    }
 
     public int[][] solution(int[][] board, int row, int col, int num){
         if (board[row][col] == num){
@@ -20,14 +26,16 @@ public class Solution {
         }
 
         // Inicializa a Fila com o no de origem e armazenando a cor original para comparaóes futuras
-        No orig = new No(row, col, board[row][col]);
-        LinkedList<No> queue = new LinkedList<>();
+        int colorOrig = board[row][col];
+        Cel orig = new Cel(row, col);
+        graph.addVertice(orig.iden);
+        LinkedList<Cel> queue = new LinkedList<>();
         queue.offer(orig);
 
         while (!queue.isEmpty()){
 
             //Pega o no que estava na fila para ser conferido e troca a cor original pela escolhida
-            No no = queue.poll();
+            Cel no = queue.poll();
             board[no.row][no.col] = num;
 
             // Itera o nosso array de directions para visitar os vizinhos do no escolhido anteriormente
@@ -49,14 +57,19 @@ public class Solution {
                         newRow < board.length &&
                         newCol >= 0 &&
                         newCol < board[0].length &&
-                        board[newRow][newCol] == orig.num){
+                        board[newRow][newCol] == colorOrig){
 
                     // Armazena a coordenada do no que deve ser modificado e coloca na fila
-                    No prox = new No(newRow, newCol);
-                    queue.offer(prox);
+                    Cel prox = new Cel(newRow, newCol);
+                    if (!graph.adj.containsKey(prox.iden)){
+                        graph.addVertice(prox.iden);
+                        queue.offer(prox);
+                    }
+                    graph.addAresta(no.iden, prox.iden);
                 }
             }
         }
+        System.out.println(graph.adj + " " + graph.vertices + " " + graph.arestas);
         return board;
     }
 }
